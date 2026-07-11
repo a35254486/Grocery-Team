@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery List Tracker</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #e8f5e9;
+            --text: #333;
+            --gray: #757575;
+            --light-gray: #f5f5f5;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .input-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, select, button {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid var(--primary);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #1b5e20;
+        }
+
+        .category-section {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .category-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 5px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .item-text {
+            font-size: 16px;
+        }
+
+        .completed .item-text {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: none;
+            color: #d32f2f;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: #ffebee;
+            border-radius: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--gray);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🛒 Grocery Tracker</h1>
+    </header>
+
+    <div class="input-card">
+        <form id="item-form" class="form-group">
+            <input type="text" id="item-name" placeholder="Item name (e.g., Milk, Apples)" required autocomplete="off">
+            <select id="item-category">
+                <option value="Produce">Produce (Fruits & Veggies)</option>
+                <option value="Meat & Seafood">Meat & Seafood</option>
+                <option value="Bakery & Deli">Bakery & Deli</option>
+                <option value="Dairy & Eggs">Dairy & Eggs</option>
+                <option value="Grains & Canned Goods">Grains & Canned Goods</option>
+                <option value="Frozen Foods">Frozen Foods</option>
+                <option value="Pharmacy & Household">Pharmacy & Household</option>
+                <option value="Other">Other Sections</option>
+            </select>
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
+
+    <div id="list-container"></div>
+
+    <script>
+        let items = JSON.parse(localStorage.getItem('groceryItems')) || [];
+
+        const form = document.getElementById('item-form');
+        const itemNameInput = document.getElementById('item-name');
+        const itemCategorySelect = document.getElementById('item-category');
+        const listContainer = document.getElementById('list-container');
+
+        // Order categories by typical store flow
+        const categoryOrder = [
+            "Produce", 
+            "Meat & Seafood", 
+            "Bakery & Deli", 
+            "Dairy & Eggs", 
+            "Grains & Canned Goods", 
+            "Frozen Foods", 
+            "Pharmacy & Household", 
+            "Other"
+        ];
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newItem = {
+                id: Date.now().toString(),
+                name: itemNameInput.value.trim(),
+                category: itemCategorySelect.value,
+                completed: false
+            };
+
+            items.push(newItem);
+            saveAndRender();
+            form.reset();
+            itemNameInput.focus();
+        });
+
+        function toggleComplete(id) {
+            items = items.map(item => {
+                if (item.id === id) return { ...item, completed: !item.completed };
+                return item;
+            });
+            saveAndRender();
+        }
+
+        function deleteItem(id) {
+            items = items.filter(item => item.id !== id);
+            saveAndRender();
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('groceryItems', JSON.stringify(items));
+            renderList();
+        }
+
+        function renderList() {
+            listContainer.innerHTML = '';
+
+            if (items.length === 0) {
+                listContainer.innerHTML = '<div class="empty-state">Your grocery list is currently empty.</div>';
+                return;
+            }
+
+            // Group active items by category
+            const grouped = {};
+            items.forEach(item => {
+                if (!grouped[item.category]) {
+                    grouped[item.category] = [];
+                }
+                grouped[item.category].push(item);
+            });
+
+            // Render categories based on store layout order
+            categoryOrder.forEach(category => {
+                if (grouped[category] && grouped[category].length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'category-section';
+
+                    const title = document.createElement('h2');
+                    title.className = 'category-title';
+                    title.textContent = category;
+                    section.appendChild(title);
+
+                    grouped[category].forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = `list-item ${item.completed ? 'completed' : ''}`;
+
+                        const leftDiv = document.createElement('div');
+                        leftDiv.className = 'item-left';
+                        leftDiv.onclick = () => toggleComplete(item.id);
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'checkbox';
+                        checkbox.checked = item.completed;
+
+                        const span = document.createElement('span');
+                        span.className = 'item-text';
+                        span.textContent = item.name;
+
+                        leftDiv.appendChild(checkbox);
+                        leftDiv.appendChild(span);
+
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-btn';
+                        deleteBtn.textContent = 'Delete';
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            deleteItem(item.id);
+                        };
+
+                        itemDiv.appendChild(leftDiv);
+                        itemDiv.appendChild(deleteBtn);
+                        section.appendChild(itemDiv);
+                    });
+
+                    listContainer.appendChild(section);
+                }
+            });
+        }
+
+        // Initial build
+        renderList();
+    </script>
+</body>
+</html>
