@@ -790,6 +790,7 @@
 
         let items = JSON.parse(localStorage.getItem('groceryItems')) || [];
         let purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+        let categoryOverrides = JSON.parse(localStorage.getItem('categoryOverrides')) || {};
         let currentView = 'list';
 
         const form = document.getElementById('item-form');
@@ -1362,6 +1363,10 @@
 
         function getMapZoneForItem(name) {
             const lower = name.toLowerCase().trim();
+            if (categoryOverrides[lower]) {
+                const found = MAP_ZONES.find(z => z.id === categoryOverrides[lower]);
+                if (found) return found;
+            }
             for (const zone of MAP_ZONES) {
                 for (const kw of zone.keywords) {
                     if (lower.includes(kw)) return zone;
@@ -1414,11 +1419,63 @@
 
                     row.appendChild(cb);
                     row.appendChild(label);
+
+                    const moveBtn = document.createElement('button');
+                    moveBtn.textContent = '⇄';
+                    moveBtn.style.cssText = 'background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:14px;padding:2px 6px;color:var(--gray)';
+                    moveBtn.title = 'Move to another section';
+                    moveBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        showZonePicker(moveBtn, item);
+                    };
+                    row.appendChild(moveBtn);
+
                     card.appendChild(row);
                 });
             }
 
             overlay.classList.add('open');
+        }
+
+        function showZonePicker(anchor, item) {
+            const existing = document.querySelector('.zone-picker');
+            if (existing) existing.remove();
+
+            const picker = document.createElement('div');
+            picker.className = 'zone-picker';
+            const rect = anchor.getBoundingClientRect();
+            picker.style.cssText = `position:fixed;top:${rect.bottom + 4}px;left:${Math.min(rect.left, window.innerWidth - 200)}px;background:white;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.2);padding:8px;z-index:300;max-height:240px;overflow-y:auto;min-width:180px`;
+
+            MAP_ZONES.forEach(z => {
+                const opt = document.createElement('div');
+                opt.style.cssText = 'padding:6px 10px;cursor:pointer;border-radius:4px;font-size:13px;display:flex;align-items:center;gap:8px';
+                opt.onmouseenter = () => opt.style.background = 'var(--light-gray)';
+                opt.onmouseleave = () => opt.style.background = '';
+                const dot = document.createElement('span');
+                dot.style.cssText = `width:10px;height:10px;border-radius:2px;background:${z.color};flex-shrink:0`;
+                opt.appendChild(dot);
+                opt.appendChild(document.createTextNode(z.label));
+                opt.onclick = () => {
+                    const lower = item.name.toLowerCase().trim();
+                    categoryOverrides[lower] = z.id;
+                    localStorage.setItem('categoryOverrides', JSON.stringify(categoryOverrides));
+                    picker.remove();
+                    saveAndRender();
+                    const overlay = document.getElementById('map-overlay');
+                    overlay.classList.remove('open');
+                };
+                picker.appendChild(opt);
+            });
+
+            document.body.appendChild(picker);
+
+            const closePicker = (e) => {
+                if (!picker.contains(e.target) && e.target !== anchor) {
+                    picker.remove();
+                    document.removeEventListener('click', closePicker);
+                }
+            };
+            setTimeout(() => document.addEventListener('click', closePicker), 0);
         }
 
         function renderMap() {
