@@ -547,6 +547,29 @@
             }
         }
 
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         .hidden {
             display: none;
         }
@@ -582,6 +605,7 @@
     <div id="section-view" class="hidden"></div>
     <div id="map-view" class="hidden"></div>
     <div id="history-view" class="hidden"></div>
+    <div id="toast" class="toast">Fine, I added it.</div>
 
     <script>
         const ITEM_SECTION_MAP = {
@@ -745,6 +769,17 @@
             "Other"
         ];
 
+        let toastTimer;
+
+        function showToast() {
+            const t = document.getElementById('toast');
+            clearTimeout(toastTimer);
+            t.classList.remove('show');
+            void t.offsetWidth;
+            t.classList.add('show');
+            toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
         function categorizeItem(name) {
             const lower = name.toLowerCase().trim();
             if (ITEM_SECTION_MAP[lower]) return ITEM_SECTION_MAP[lower];
@@ -778,6 +813,7 @@
 
             items.push(newItem);
             saveAndRender();
+            showToast();
             form.reset();
             detectedSectionEl.innerHTML = '';
             itemNameInput.focus();
