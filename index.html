@@ -651,143 +651,6 @@
     <div id="map-overlay" class="map-overlay"><div class="map-overlay-card" id="map-overlay-card"></div></div>
 
     <script>
-        const ITEM_SECTION_MAP = {
-            // Produce
-            'apple': 'Produce', 'apples': 'Produce', 'banana': 'Produce', 'bananas': 'Produce',
-            'lettuce': 'Produce', 'tomato': 'Produce', 'tomatoes': 'Produce', 'onion': 'Produce',
-            'onions': 'Produce', 'potato': 'Produce', 'potatoes': 'Produce', 'carrot': 'Produce',
-            'carrots': 'Produce', 'broccoli': 'Produce', 'spinach': 'Produce', 'kale': 'Produce',
-            'celery': 'Produce', 'cucumber': 'Produce', 'cucumbers': 'Produce', 'avocado': 'Produce',
-            'avocados': 'Produce', 'garlic': 'Produce', 'ginger': 'Produce', 'lemon': 'Produce',
-            'lemons': 'Produce', 'lime': 'Produce', 'limes': 'Produce', 'orange': 'Produce',
-            'oranges': 'Produce', 'grapes': 'Produce', 'strawberry': 'Produce', 'strawberries': 'Produce',
-            'blueberry': 'Produce', 'blueberries': 'Produce', 'raspberry': 'Produce', 'raspberries': 'Produce',
-            'cilantro': 'Produce', 'parsley': 'Produce', 'basil': 'Produce', 'zucchini': 'Produce',
-            'squash': 'Produce', 'cabbage': 'Produce', 'cauliflower': 'Produce', 'corn': 'Produce',
-            'green beans': 'Produce', 'peas': 'Produce', 'radish': 'Produce', 'scallion': 'Produce',
-            'scallions': 'Produce', 'asparagus': 'Produce', 'eggplant': 'Produce', 'melon': 'Produce',
-            'watermelon': 'Produce', 'cantaloupe': 'Produce', 'pineapple': 'Produce', 'mango': 'Produce',
-            'peach': 'Produce', 'peaches': 'Produce', 'plum': 'Produce', 'plums': 'Produce',
-            'pear': 'Produce', 'pears': 'Produce', 'kiwi': 'Produce', 'coconut': 'Produce',
-            'mushroom': 'Produce', 'mushrooms': 'Produce', 'sweet potato': 'Produce',
-            'sweet potatoes': 'Produce', 'bell pepper': 'Produce', 'bell peppers': 'Produce',
-            'jalapeno': 'Produce', 'jalapeño': 'Produce', 'beet': 'Produce', 'beets': 'Produce',
-            'turnip': 'Produce', 'turnips': 'Produce', 'parsnip': 'Produce', 'parsnips': 'Produce',
-            'herb': 'Produce', 'herbs': 'Produce', 'salad': 'Produce', 'salad mix': 'Produce',
-            'sprouts': 'Produce', 'brussels sprouts': 'Produce',
-
-            // Meat & Seafood
-            'chicken': 'Meat & Seafood', 'chicken breast': 'Meat & Seafood', 'chicken thigh': 'Meat & Seafood',
-            'chicken thighs': 'Meat & Seafood', 'chicken wings': 'Meat & Seafood', 'chicken wing': 'Meat & Seafood',
-            'beef': 'Meat & Seafood', 'pork': 'Meat & Seafood', 'bacon': 'Meat & Seafood',
-            'sausage': 'Meat & Seafood', 'sausages': 'Meat & Seafood', 'steak': 'Meat & Seafood',
-            'ground beef': 'Meat & Seafood', 'ground turkey': 'Meat & Seafood', 'turkey': 'Meat & Seafood',
-            'ham': 'Meat & Seafood', 'lamb': 'Meat & Seafood', 'ribs': 'Meat & Seafood',
-            'brisket': 'Meat & Seafood', 'roast': 'Meat & Seafood', 'meat': 'Meat & Seafood',
-            'salmon': 'Meat & Seafood', 'tuna': 'Meat & Seafood', 'shrimp': 'Meat & Seafood',
-            'fish': 'Meat & Seafood', 'seafood': 'Meat & Seafood', 'crab': 'Meat & Seafood',
-            'lobster': 'Meat & Seafood', 'scallops': 'Meat & Seafood', 'tilapia': 'Meat & Seafood',
-            'cod': 'Meat & Seafood', 'catfish': 'Meat & Seafood', 'hot dog': 'Meat & Seafood',
-            'hot dogs': 'Meat & Seafood', 'pepperoni': 'Meat & Seafood', 'salami': 'Meat & Seafood',
-            'prosciutto': 'Meat & Seafood', 'deli meat': 'Meat & Seafood',
-
-            // Bakery & Deli
-            'bread': 'Bakery & Deli', 'bagel': 'Bakery & Deli', 'bagels': 'Bakery & Deli',
-            'croissant': 'Bakery & Deli', 'croissants': 'Bakery & Deli', 'muffin': 'Bakery & Deli',
-            'muffins': 'Bakery & Deli', 'donut': 'Bakery & Deli', 'donuts': 'Bakery & Deli',
-            'baguette': 'Bakery & Deli', 'tortilla': 'Bakery & Deli', 'tortillas': 'Bakery & Deli',
-            'pita': 'Bakery & Deli', 'naan': 'Bakery & Deli', 'roll': 'Bakery & Deli',
-            'rolls': 'Bakery & Deli', 'bun': 'Bakery & Deli', 'buns': 'Bakery & Deli',
-            'cake': 'Bakery & Deli', 'cookie': 'Bakery & Deli', 'cookies': 'Bakery & Deli',
-            'pie': 'Bakery & Deli', 'pastry': 'Bakery & Deli', 'sandwich': 'Bakery & Deli',
-            'loaf': 'Bakery & Deli', 'english muffin': 'Bakery & Deli', 'english muffins': 'Bakery & Deli',
-            'crouton': 'Bakery & Deli', 'croutons': 'Bakery & Deli', 'baguette': 'Bakery & Deli',
-
-            // Dairy & Eggs
-            'milk': 'Dairy & Eggs', 'egg': 'Dairy & Eggs', 'eggs': 'Dairy & Eggs',
-            'cheese': 'Dairy & Eggs', 'butter': 'Dairy & Eggs', 'yogurt': 'Dairy & Eggs',
-            'cream cheese': 'Dairy & Eggs', 'sour cream': 'Dairy & Eggs', 'heavy cream': 'Dairy & Eggs',
-            'half and half': 'Dairy & Eggs', 'cottage cheese': 'Dairy & Eggs', 'mozzarella': 'Dairy & Eggs',
-            'cheddar': 'Dairy & Eggs', 'parmesan': 'Dairy & Eggs', 'cream': 'Dairy & Eggs',
-            'buttermilk': 'Dairy & Eggs', 'greek yogurt': 'Dairy & Eggs', 'string cheese': 'Dairy & Eggs',
-            'whipped cream': 'Dairy & Eggs', 'margarine': 'Dairy & Eggs',
-
-            // Grains & Canned Goods
-            'rice': 'Grains & Canned Goods', 'pasta': 'Grains & Canned Goods', 'spaghetti': 'Grains & Canned Goods',
-            'penne': 'Grains & Canned Goods', 'rigatoni': 'Grains & Canned Goods', 'fettuccine': 'Grains & Canned Goods',
-            'noodle': 'Grains & Canned Goods', 'noodles': 'Grains & Canned Goods', 'bean': 'Grains & Canned Goods',
-            'beans': 'Grains & Canned Goods', 'black bean': 'Grains & Canned Goods', 'black beans': 'Grains & Canned Goods',
-            'kidney bean': 'Grains & Canned Goods', 'kidney beans': 'Grains & Canned Goods',
-            'chickpea': 'Grains & Canned Goods', 'chickpeas': 'Grains & Canned Goods', 'lentil': 'Grains & Canned Goods',
-            'lentils': 'Grains & Canned Goods', 'canned tomato': 'Grains & Canned Goods',
-            'canned tomatoes': 'Grains & Canned Goods', 'tomato sauce': 'Grains & Canned Goods',
-            'tomato paste': 'Grains & Canned Goods', 'broth': 'Grains & Canned Goods', 'stock': 'Grains & Canned Goods',
-            'soup': 'Grains & Canned Goods', 'cereal': 'Grains & Canned Goods', 'oatmeal': 'Grains & Canned Goods',
-            'granola': 'Grains & Canned Goods', 'cracker': 'Grains & Canned Goods', 'crackers': 'Grains & Canned Goods',
-            'chip': 'Grains & Canned Goods', 'chips': 'Grains & Canned Goods', 'tortilla chip': 'Grains & Canned Goods',
-            'tortilla chips': 'Grains & Canned Goods', 'popcorn': 'Grains & Canned Goods',
-            'flour': 'Grains & Canned Goods', 'sugar': 'Grains & Canned Goods', 'salt': 'Grains & Canned Goods',
-            'pepper': 'Grains & Canned Goods', 'olive oil': 'Grains & Canned Goods', 'vegetable oil': 'Grains & Canned Goods',
-            'vinegar': 'Grains & Canned Goods', 'soy sauce': 'Grains & Canned Goods', 'ketchup': 'Grains & Canned Goods',
-            'mustard': 'Grains & Canned Goods', 'mayonnaise': 'Grains & Canned Goods', 'relish': 'Grains & Canned Goods',
-            'pickle': 'Grains & Canned Goods', 'pickles': 'Grains & Canned Goods', 'pasta sauce': 'Grains & Canned Goods',
-            'salsa': 'Grains & Canned Goods', 'honey': 'Grains & Canned Goods', 'syrup': 'Grains & Canned Goods',
-            'pancake mix': 'Grains & Canned Goods', 'baking soda': 'Grains & Canned Goods',
-            'baking powder': 'Grains & Canned Goods', 'vanilla': 'Grains & Canned Goods',
-            'vanilla extract': 'Grains & Canned Goods', 'bread crumb': 'Grains & Canned Goods',
-            'bread crumbs': 'Grains & Canned Goods', 'peanut butter': 'Grains & Canned Goods',
-            'jam': 'Grains & Canned Goods', 'jelly': 'Grains & Canned Goods', 'nutella': 'Grains & Canned Goods',
-            'canned tuna': 'Grains & Canned Goods', 'canned salmon': 'Grains & Canned Goods',
-            'canned chicken': 'Grains & Canned Goods', 'mac and cheese': 'Grains & Canned Goods',
-            'macaroni': 'Grains & Canned Goods', 'quinoa': 'Grains & Canned Goods', 'couscous': 'Grains & Canned Goods',
-            'barley': 'Grains & Canned Goods', 'oats': 'Grains & Canned Goods', 'almond': 'Grains & Canned Goods',
-            'almonds': 'Grains & Canned Goods', 'cashew': 'Grains & Canned Goods', 'cashews': 'Grains & Canned Goods',
-            'peanut': 'Grains & Canned Goods', 'peanuts': 'Grains & Canned Goods', 'walnut': 'Grains & Canned Goods',
-            'walnuts': 'Grains & Canned Goods', 'cooking spray': 'Grains & Canned Goods', 'spice': 'Grains & Canned Goods',
-            'spices': 'Grains & Canned Goods', 'seasoning': 'Grains & Canned Goods',
-
-            // Frozen Foods
-            'frozen pizza': 'Frozen Foods', 'frozen vegetable': 'Frozen Foods',
-            'frozen vegetables': 'Frozen Foods', 'frozen fruit': 'Frozen Foods',
-            'frozen fruits': 'Frozen Foods', 'ice cream': 'Frozen Foods', 'frozen dinner': 'Frozen Foods',
-            'frozen dinners': 'Frozen Foods', 'frozen chicken nuggets': 'Frozen Foods',
-            'frozen fries': 'Frozen Foods', 'frozen waffle': 'Frozen Foods',
-            'frozen waffles': 'Frozen Foods', 'frozen burrito': 'Frozen Foods',
-            'frozen burritos': 'Frozen Foods', 'frozen berry': 'Frozen Foods',
-            'frozen berries': 'Frozen Foods', 'popsicle': 'Frozen Foods', 'popsicles': 'Frozen Foods',
-            'frozen yogurt': 'Frozen Foods', 'frozen meal': 'Frozen Foods', 'frozen meals': 'Frozen Foods',
-            'frozen pizza': 'Frozen Foods', 'frozen broccoli': 'Frozen Foods',
-            'frozen spinach': 'Frozen Foods', 'tv dinner': 'Frozen Foods',
-
-            // Pharmacy & Household
-            'toilet paper': 'Pharmacy & Household', 'paper towel': 'Pharmacy & Household',
-            'paper towels': 'Pharmacy & Household', 'tissue': 'Pharmacy & Household',
-            'tissues': 'Pharmacy & Household', 'napkin': 'Pharmacy & Household',
-            'napkins': 'Pharmacy & Household', 'soap': 'Pharmacy & Household',
-            'hand soap': 'Pharmacy & Household', 'dish soap': 'Pharmacy & Household',
-            'laundry detergent': 'Pharmacy & Household', 'detergent': 'Pharmacy & Household',
-            'cleaner': 'Pharmacy & Household', 'cleaning spray': 'Pharmacy & Household',
-            'bleach': 'Pharmacy & Household', 'trash bag': 'Pharmacy & Household',
-            'trash bags': 'Pharmacy & Household', 'ziploc': 'Pharmacy & Household',
-            'aluminum foil': 'Pharmacy & Household', 'plastic wrap': 'Pharmacy & Household',
-            'parchment paper': 'Pharmacy & Household', 'shampoo': 'Pharmacy & Household',
-            'conditioner': 'Pharmacy & Household', 'toothpaste': 'Pharmacy & Household',
-            'toothbrush': 'Pharmacy & Household', 'toothbrushes': 'Pharmacy & Household',
-            'deodorant': 'Pharmacy & Household', 'lotion': 'Pharmacy & Household',
-            'vitamin': 'Pharmacy & Household', 'vitamins': 'Pharmacy & Household',
-            'supplement': 'Pharmacy & Household', 'supplements': 'Pharmacy & Household',
-            'bandaid': 'Pharmacy & Household', 'band-aid': 'Pharmacy & Household',
-            'first aid': 'Pharmacy & Household', 'battery': 'Pharmacy & Household',
-            'batteries': 'Pharmacy & Household', 'light bulb': 'Pharmacy & Household',
-            'light bulbs': 'Pharmacy & Household', 'medicine': 'Pharmacy & Household',
-            'medication': 'Pharmacy & Household', 'tampon': 'Pharmacy & Household',
-            'tampons': 'Pharmacy & Household', 'pads': 'Pharmacy & Household',
-            'diaper': 'Pharmacy & Household', 'diapers': 'Pharmacy & Household',
-            'wipes': 'Pharmacy & Household', 'paper plates': 'Pharmacy & Household',
-            'paper cups': 'Pharmacy & Household', 'plastic utensils': 'Pharmacy & Household',
-            'trash can': 'Pharmacy & Household',
-        };
-
         let items = JSON.parse(localStorage.getItem('groceryItems')) || [];
         let purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
         let categoryOverrides = JSON.parse(localStorage.getItem('categoryOverrides')) || {};
@@ -802,57 +665,15 @@
         const historyView = document.getElementById('history-view');
         const viewBtns = document.querySelectorAll('.view-btn');
 
-        const categoryOrder = [
-            "Produce",
-            "Meat & Seafood",
-            "Bakery & Deli",
-            "Dairy & Eggs",
-            "Grains & Canned Goods",
-            "Frozen Foods",
-            "Pharmacy & Household",
-            "Other"
-        ];
-
-        const messages = [
-            "Fine, I added it.",
-            "Should be saved, I think.",
-            "Right away, your highness.",
-            "Mmhmm.",
-            "I'll add it in a minute.",
-            "Is that good for you?",
-            "Is this my entire purpose? Oh my god...",
-            "Very unique taste.",
-            "Remember to add tortellini!",
-            "Probably should pick up some cat toys too.",
-            "Add some fun stuff, yeesh."
-        ];
-
-        let toastTimer;
-
-        function showToast() {
-            const t = document.getElementById('toast');
-            t.textContent = messages[Math.floor(Math.random() * messages.length)];
-            clearTimeout(toastTimer);
-            t.classList.remove('show');
-            void t.offsetWidth;
-            t.classList.add('show');
-            toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
-        }
-
-        function categorizeItem(name) {
-            const lower = name.toLowerCase().trim();
-            if (ITEM_SECTION_MAP[lower]) return ITEM_SECTION_MAP[lower];
-            for (const [key, section] of Object.entries(ITEM_SECTION_MAP)) {
-                if (lower.includes(key)) return section;
-            }
-            return 'Other';
+        function getCategory(name) {
+            const zone = getMapZoneForItem(name);
+            return zone ? zone.label : 'Other';
         }
 
         itemNameInput.addEventListener('input', () => {
             const val = itemNameInput.value.trim();
             if (val.length > 0) {
-                const section = categorizeItem(val);
-                detectedSectionEl.innerHTML = `<span>${section}</span>`;
+                detectedSectionEl.innerHTML = `<span>${getCategory(val)}</span>`;
             } else {
                 detectedSectionEl.innerHTML = '';
             }
@@ -866,7 +687,7 @@
             const newItem = {
                 id: Date.now().toString(),
                 name: name,
-                category: categorizeItem(name),
+                category: getCategory(name),
                 completed: false
             };
 
@@ -917,8 +738,9 @@
         function getGroupedItems() {
             const grouped = {};
             items.forEach(item => {
-                if (!grouped[item.category]) grouped[item.category] = [];
-                grouped[item.category].push(item);
+                const cat = getCategory(item.name);
+                if (!grouped[cat]) grouped[cat] = [];
+                grouped[cat].push(item);
             });
             return grouped;
         }
@@ -932,9 +754,12 @@
 
             const grouped = getGroupedItems();
 
-            categoryOrder.forEach(category => {
+            const shown = new Set();
+            MAP_ZONES.forEach(z => {
+                const category = z.label;
                 const catItems = grouped[category];
                 if (!catItems || catItems.length === 0) return;
+                shown.add(category);
 
                 const section = document.createElement('div');
                 section.className = 'category-section';
@@ -983,6 +808,44 @@
 
                 listView.appendChild(section);
             });
+
+            if (grouped['Other'] && !shown.has('Other')) {
+                const catItems = grouped['Other'];
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                const title = document.createElement('h2');
+                title.className = 'category-title';
+                title.textContent = 'Other';
+                const countSpan = document.createElement('span');
+                countSpan.className = 'count';
+                countSpan.textContent = `${catItems.filter(i => !i.completed).length} left`;
+                title.appendChild(countSpan);
+                section.appendChild(title);
+                catItems.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = `list-item ${item.completed ? 'completed' : ''}`;
+                    const leftDiv = document.createElement('div');
+                    leftDiv.className = 'item-left';
+                    leftDiv.onclick = () => toggleComplete(item.id);
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'checkbox';
+                    checkbox.checked = item.completed;
+                    const span = document.createElement('span');
+                    span.className = 'item-text';
+                    span.textContent = item.name;
+                    leftDiv.appendChild(checkbox);
+                    leftDiv.appendChild(span);
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = '✕';
+                    deleteBtn.onclick = (e) => { e.stopPropagation(); deleteItem(item.id); };
+                    itemDiv.appendChild(leftDiv);
+                    itemDiv.appendChild(deleteBtn);
+                    section.appendChild(itemDiv);
+                });
+                listView.appendChild(section);
+            }
         }
 
         function renderSections() {
@@ -996,9 +859,12 @@
             const grid = document.createElement('div');
             grid.className = 'section-grid';
 
-            categoryOrder.forEach(category => {
+            const shown = new Set();
+            MAP_ZONES.forEach(z => {
+                const category = z.label;
                 const catItems = grouped[category];
                 if (!catItems || catItems.length === 0) return;
+                shown.add(category);
 
                 const card = document.createElement('div');
                 card.className = 'section-card';
@@ -1009,6 +875,7 @@
                 const title = document.createElement('h3');
                 title.className = 'section-card-title';
                 title.textContent = category;
+                title.style.color = z.color;
 
                 const count = document.createElement('span');
                 count.className = 'section-card-count';
@@ -1018,6 +885,7 @@
                 header.appendChild(title);
                 header.appendChild(count);
                 card.appendChild(header);
+                card.style.borderTopColor = z.color;
 
                 catItems.forEach(item => {
                     const itemDiv = document.createElement('div');
@@ -1040,6 +908,42 @@
 
                 grid.appendChild(card);
             });
+
+            if (grouped['Other'] && !shown.has('Other')) {
+                const catItems = grouped['Other'];
+                const card = document.createElement('div');
+                card.className = 'section-card';
+                card.style.borderTopColor = 'var(--gray)';
+                const header = document.createElement('div');
+                header.className = 'section-card-header';
+                const title = document.createElement('h3');
+                title.className = 'section-card-title';
+                title.textContent = 'Other';
+                title.style.color = 'var(--gray)';
+                const count = document.createElement('span');
+                count.className = 'section-card-count';
+                const activeItems = catItems.filter(i => !i.completed).length;
+                count.textContent = `${activeItems} item${activeItems !== 1 ? 's' : ''}`;
+                header.appendChild(title);
+                header.appendChild(count);
+                card.appendChild(header);
+                catItems.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'section-card-item';
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.className = 'checkbox';
+                    cb.checked = item.completed;
+                    cb.onchange = () => toggleComplete(item.id);
+                    const label = document.createElement('label');
+                    label.textContent = item.name;
+                    label.className = item.completed ? 'completed-label' : '';
+                    itemDiv.appendChild(cb);
+                    itemDiv.appendChild(label);
+                    card.appendChild(itemDiv);
+                });
+                grid.appendChild(card);
+            }
 
             sectionView.appendChild(grid);
         }
