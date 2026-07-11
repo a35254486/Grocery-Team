@@ -452,6 +452,67 @@
             color: var(--text);
         }
 
+        .map-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .map-col-labels {
+            display: grid;
+            grid-template-columns: 24px repeat(8, 1fr);
+            gap: 4px;
+            max-width: 450px;
+            width: 100%;
+            padding: 0 8px;
+            margin-bottom: 2px;
+        }
+
+        .map-col-label {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray);
+        }
+
+        .map-row-wrap {
+            display: flex;
+            gap: 4px;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .map-row-labels {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 24px;
+            flex-shrink: 0;
+        }
+
+        .map-row-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray);
+            aspect-ratio: 1 / 1;
+        }
+
+        .store-map {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 4px;
+            flex: 1;
+            aspect-ratio: 2 / 1;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
         .map-legend {
             display: flex;
             flex-wrap: wrap;
@@ -475,6 +536,9 @@
         }
 
         @media (max-width: 500px) {
+            .store-map, .map-col-labels, .map-row-wrap {
+                max-width: 100%;
+            }
             .store-map {
                 gap: 2px;
                 padding: 4px;
@@ -950,10 +1014,27 @@
 
         const MAP_ZONES = [
             {
+                id: 'nice_cheeses',
+                label: 'Nice Cheeses',
+                color: '#e91e63',
+                cols: ['H'], rows: [1],
+                keywords: ['parmesan', 'asiago', 'ricotta', 'provolone', 'gouda', 'brie',
+                    'camembert', 'pecorino', 'manchego', 'fontina', 'gruyere', 'havarti',
+                    'mascarpone', 'burrata', 'fresh mozzarella', 'mozzarella ball']
+            },
+            {
+                id: 'tortellini_pesto',
+                label: 'Tortellini & Pesto',
+                color: '#f06292',
+                cols: ['H'], rows: [2],
+                keywords: ['tortellini', 'pesto', 'ravioli', 'manicotti', 'cannelloni',
+                    'gnocchi', 'agnolotti']
+            },
+            {
                 id: 'produce',
                 label: 'Produce',
                 color: '#4caf50',
-                cols: [8], rows: [3, 4],
+                cols: ['H'], rows: [3, 4],
                 keywords: ['apple', 'banana', 'lettuce', 'tomato', 'onion', 'potato', 'carrot',
                     'broccoli', 'spinach', 'kale', 'celery', 'cucumber', 'avocado', 'garlic',
                     'ginger', 'lemon', 'lime', 'orange', 'grapes', 'strawberry', 'blueberry',
@@ -964,47 +1045,92 @@
                     'parsnip', 'herb', 'salad', 'sprouts', 'brussels sprouts']
             },
             {
-                id: 'italian',
-                label: 'Italian',
-                color: '#e91e63',
-                cols: [8], rows: [1, 2],
-                keywords: ['mozzarella', 'tortellini', 'pesto', 'prosciutto', 'parmesan',
-                    'parmigiano', 'asiago', 'ricotta', 'provolone', 'salame', 'bruschetta',
-                    'ciabatta', 'focaccia', 'risotto', 'polenta', 'cannoli', 'marinara',
-                    'alfredo', 'carbonara', 'ravioli', 'manicotti', 'lasagna', 'spaghetti',
-                    'penne', 'rigatoni', 'fettuccine', 'linguine', 'angel hair']
+                id: 'kid_pasta',
+                label: 'Kid Pasta',
+                color: '#ffb74d',
+                cols: ['G'], rows: [2],
+                keywords: ['mac and cheese', 'spaghetti-os', 'spaghettios', 'kid pasta',
+                    'dino shapes', 'princess pasta', 'animal pasta', 'tv dinner', 'easy mac']
+            },
+            {
+                id: 'canned_goods',
+                label: 'Canned Goods',
+                color: '#ff8a65',
+                cols: ['G'], rows: [3],
+                keywords: ['canned', 'canned soup', 'canned chili', 'canned beans', 'spam',
+                    'canned tuna', 'canned chicken', 'canned salmon', 'canned tomato',
+                    'canned vegetable', 'canned fruit', 'canned corn', 'canned peas']
+            },
+            {
+                id: 'foreign_things',
+                label: 'Foreign',
+                color: '#ce93d8',
+                cols: ['G'], rows: [4],
+                keywords: ['soy sauce', 'teriyaki', 'sriracha', 'curry', 'kimchi', 'sushi',
+                    'wasabi', 'hoisin', 'fish sauce', 'coconut milk', 'chickpea', 'naan',
+                    'pita', 'tahini', 'hummus', 'falafel', 'tortilla', 'salsa', 'taco',
+                    'enchilada', 'quesadilla']
+            },
+            {
+                id: 'bars_cereal',
+                label: 'Bars & Cereals',
+                color: '#a1887f',
+                cols: ['F'], rows: [2, 3, 4],
+                keywords: ['granola bar', 'protein bar', 'cereal', 'oatmeal', 'granola',
+                    'breakfast bar', 'nutrigrain', 'nature valley', 'clif bar', 'kind bar',
+                    'rice krispies', 'cheerios', 'frosted flakes', 'raisin bran', 'corn flakes']
+            },
+            {
+                id: 'waffles_pbj',
+                label: 'Waffles & PB&J',
+                color: '#8d6e63',
+                cols: ['B'], rows: [2],
+                keywords: ['waffle', 'pancake mix', 'pancake', 'french toast', 'peanut butter',
+                    'jam', 'jelly', 'nutella', 'fluff', 'marshmallow fluff', 'honey', 'syrup',
+                    'maple syrup', 'pb&j', 'pbj']
+            },
+            {
+                id: 'bread',
+                label: 'Bread',
+                color: '#ffcc80',
+                cols: ['B'], rows: [3, 4],
+                keywords: ['bread', 'bagel', 'baguette', 'tortilla', 'croissant', 'muffin',
+                    'english muffin', 'pita', 'naan', 'roll', 'bun', 'ciabatta', 'focaccia',
+                    'loaf', 'white bread', 'wheat bread', 'rye bread', 'sourdough']
             },
             {
                 id: 'frozen',
                 label: 'Frozen',
                 color: '#2196f3',
-                cols: [1, 2], rows: [2, 3, 4],
+                cols: ['A'], rows: [2, 3, 4],
                 keywords: ['frozen', 'popsicle', 'popsicles', 'ice cream', 'frozen dinner',
                     'frozen pizza', 'frozen vegetable', 'frozen vegetables', 'frozen fruit',
                     'frozen fruits', 'frozen chicken nuggets', 'frozen fries', 'frozen waffle',
-                    'frozen burrito', 'frozen berry', 'tv dinner', 'frozen meal', 'frozen meals',
+                    'frozen burrito', 'frozen berry', 'frozen meal', 'frozen meals',
                     'frozen yogurt', 'frozen broccoli', 'frozen spinach']
             },
             {
                 id: 'milk',
                 label: 'Milk & Cream',
                 color: '#00bcd4',
-                cols: [1, 2], rows: [1],
+                cols: ['A', 'B'], rows: [1],
                 keywords: ['milk', 'soy milk', 'almond milk', 'oat milk', 'coconut milk',
                     'cream cheese', 'half and half', 'heavy cream', 'whipped cream', 'buttermilk',
-                    'condensed milk', 'evaporated milk', 'lactose free milk', 'chocolate milk']
+                    'condensed milk', 'evaporated milk', 'chocolate milk']
             },
             {
                 id: 'juice_yogurt',
                 label: 'Juice & Yogurt',
                 color: '#ff9800',
-                cols: [3, 4, 5], rows: [1],
+                cols: ['C', 'D', 'E'], rows: [1],
                 keywords: ['orange juice', 'apple juice', 'grape juice', 'cranberry juice',
                     'yogurt', 'yogurt pouch', 'yogurt pouches', 'yogurt tub', 'yogurt tubs',
                     'kefir', 'juice', 'juice box', 'juice boxes', 'greek yogurt', 'drinkable yogurt',
                     'fruit juice', 'lemonade', 'iced tea']
             }
         ];
+
+        function colToNum(col) { return col.charCodeAt(0) - 65; }
 
         function getMapZoneForItem(name) {
             const lower = name.toLowerCase().trim();
@@ -1018,6 +1144,35 @@
 
         function renderMap() {
             mapView.innerHTML = '';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'map-wrapper';
+
+            const colLabels = document.createElement('div');
+            colLabels.className = 'map-col-labels';
+            const corner = document.createElement('div');
+            corner.className = 'map-col-label';
+            colLabels.appendChild(corner);
+            for (let ci = 0; ci < 8; ci++) {
+                const lbl = document.createElement('div');
+                lbl.className = 'map-col-label';
+                lbl.textContent = String.fromCharCode(65 + ci);
+                colLabels.appendChild(lbl);
+            }
+            wrapper.appendChild(colLabels);
+
+            const rowWrap = document.createElement('div');
+            rowWrap.className = 'map-row-wrap';
+
+            const rowLabels = document.createElement('div');
+            rowLabels.className = 'map-row-labels';
+            for (let r = 1; r <= 4; r++) {
+                const lbl = document.createElement('div');
+                lbl.className = 'map-row-label';
+                lbl.textContent = r;
+                rowLabels.appendChild(lbl);
+            }
+            rowWrap.appendChild(rowLabels);
 
             const grid = document.createElement('div');
             grid.className = 'store-map';
@@ -1038,13 +1193,14 @@
             });
 
             for (let r = 1; r <= 4; r++) {
-                for (let c = 1; c <= 8; c++) {
+                for (let ci = 0; ci < 8; ci++) {
                     const cell = document.createElement('div');
-                    const key = `${c}-${r}`;
+                    const colLetter = String.fromCharCode(65 + ci);
+                    const key = `${colLetter}-${r}`;
                     const zone = zoneColors[key];
 
                     if (zone) {
-                        const isFirst = c === zone.cols[0] && r === zone.rows[0];
+                        const isFirst = colLetter === zone.cols[0] && r === zone.rows[0];
                         cell.className = 'map-cell map-cell-zone';
                         cell.style.background = zone.color + '30';
                         cell.style.borderColor = zone.color;
@@ -1075,7 +1231,9 @@
                 }
             }
 
-            mapView.appendChild(grid);
+            rowWrap.appendChild(grid);
+            wrapper.appendChild(rowWrap);
+            mapView.appendChild(wrapper);
 
             // Unplaced items
             const unplaced = items.filter(item => {
