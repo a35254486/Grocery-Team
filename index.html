@@ -367,13 +367,15 @@
         .store-map {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(4, 1fr);
             gap: 4px;
+            max-width: 450px;
             aspect-ratio: 2 / 1;
             background: white;
             padding: 8px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 16px;
+            margin: 0 auto 16px;
         }
 
         .map-cell {
