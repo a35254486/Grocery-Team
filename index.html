@@ -409,6 +409,11 @@
 
         .map-cell-zone {
             border: 2px solid rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
+
+        .map-cell-zone:hover {
+            filter: brightness(1.05);
         }
 
         .map-cell-label {
@@ -529,6 +534,76 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        .map-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+
+        .map-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .map-overlay-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 340px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            transform: scale(0.9);
+            transition: transform 0.25s;
+        }
+
+        .map-overlay.open .map-overlay-card {
+            transform: scale(1);
+        }
+
+        .map-overlay-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .map-overlay-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .map-overlay-item:last-child {
+            border-bottom: none;
+        }
+
+        .map-overlay-item label {
+            flex: 1;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .map-overlay-empty {
+            text-align: center;
+            color: var(--gray);
+            padding: 20px;
+            font-size: 14px;
+        }
+
         .hidden {
             display: none;
         }
@@ -571,6 +646,7 @@
     <div id="map-view" class="hidden"></div>
     <div id="history-view" class="hidden"></div>
     <div id="toast" class="toast"></div>
+    <div id="map-overlay" class="map-overlay"><div class="map-overlay-card" id="map-overlay-card"></div></div>
 
     <script>
         const ITEM_SECTION_MAP = {
@@ -1292,6 +1368,57 @@
             return null;
         }
 
+        function showMapOverlay(zone, zoneKey) {
+            const overlay = document.getElementById('map-overlay');
+            const card = document.getElementById('map-overlay-card');
+            card.innerHTML = '';
+
+            const title = document.createElement('div');
+            title.className = 'map-overlay-title';
+            title.style.color = zone.color;
+            title.textContent = zone.label;
+            card.appendChild(title);
+
+            const zoneItems = items.filter(i => {
+                const z = getMapZoneForItem(i.name);
+                return z && z.id === zone.id;
+            });
+
+            if (zoneItems.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'map-overlay-empty';
+                empty.textContent = 'No items in this section yet.';
+                card.appendChild(empty);
+            } else {
+                zoneItems.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'map-overlay-item';
+
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.className = 'checkbox';
+                    cb.checked = item.completed;
+                    cb.onchange = () => toggleComplete(item.id);
+
+                    const label = document.createElement('label');
+                    label.textContent = item.name;
+                    label.style.textDecoration = item.completed ? 'line-through' : 'none';
+                    label.style.color = item.completed ? 'var(--gray)' : '';
+
+                    cb.addEventListener('change', () => {
+                        label.style.textDecoration = cb.checked ? 'line-through' : 'none';
+                        label.style.color = cb.checked ? 'var(--gray)' : '';
+                    });
+
+                    row.appendChild(cb);
+                    row.appendChild(label);
+                    card.appendChild(row);
+                });
+            }
+
+            overlay.classList.add('open');
+        }
+
         function renderMap() {
             mapView.innerHTML = '';
 
@@ -1343,6 +1470,12 @@
                                 dot.textContent = '• ' + item.name;
                                 cell.appendChild(dot);
                             }
+                        });
+
+                        const zoneRef = zone;
+                        cell.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showMapOverlay(zoneRef, zoneKey);
                         });
                     } else {
                         cell.className = 'map-cell map-cell-empty';
@@ -1463,6 +1596,12 @@
 
         document.getElementById('view-select').addEventListener('change', (e) => {
             switchView(e.target.value);
+        });
+
+        document.getElementById('map-overlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                e.currentTarget.classList.remove('open');
+            }
         });
 
         // Initial render
