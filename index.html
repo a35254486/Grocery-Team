@@ -681,7 +681,10 @@
                 localStorage.setItem('groceryItems', JSON.stringify(items));
                 localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
                 localStorage.setItem('categoryOverrides', JSON.stringify(categoryOverrides));
-                saveAndRender();
+                renderList();
+                renderSections();
+                renderMap();
+                renderHistory();
             } else {
                 SYNC_DOC.set({ items: items, purchaseHistory: purchaseHistory, categoryOverrides: categoryOverrides });
             }
