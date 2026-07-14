@@ -1,1 +1,7 @@
+function sendPush(message) {
+  fetch('https://ntfy.sh/grocery-gang-humba-wumba', {
+    method: 'POST',
+    body: message
+  }).catch(() => {}); // fail silently if offline
+}
 
