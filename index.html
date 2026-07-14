@@ -979,11 +979,13 @@
             };
 
             items.push(newItem);
+            
+            // Clear input immediately before render
+            itemNameInput.value = '';
+            detectedSectionEl.innerHTML = '';
+            
             saveAndRender();
             showToast();
-            itemNameInput.value = '';
-            form.reset();
-            detectedSectionEl.innerHTML = '';
             itemNameInput.focus();
         });
 
