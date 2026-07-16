@@ -1015,6 +1015,9 @@
             };
 
             trips.push(trip);
+            SYNC_DOC.update({
+                trips: firebase.firestore.FieldValue.arrayUnion(trip)
+            });
             items = items.filter(item => !item.completed);
             saveAndRender();
         }
@@ -1040,7 +1043,7 @@
             localStorage.setItem('trips', JSON.stringify(trips));
             localStorage.setItem('categoryOverrides', JSON.stringify(categoryOverrides));
             syncing = true;
-            SYNC_DOC.set({ items: items, trips: trips, categoryOverrides: categoryOverrides })
+            SYNC_DOC.set({ items: items, categoryOverrides: categoryOverrides }, {merge: true})
                 .then(() => { syncing = false; })
                 .catch(() => { syncing = false; });
             renderList();
